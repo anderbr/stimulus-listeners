@@ -4,6 +4,7 @@
 /.npmignore             export-ignore
 /eslint.config.js       export-ignore
 /rollup.config.js       export-ignore
+/stimulus-listeners.png export-ignore
 /tsconfig.json          export-ignore
 /vite.config.ts         export-ignore
 /vitest.config.ts       export-ignore
