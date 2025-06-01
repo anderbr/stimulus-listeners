@@ -9,8 +9,7 @@
   "exports": {
     ".": {
       "import": "./dist/stimulus-listeners.es.js",
-      "require": "./dist/stimulus-listeners.umd.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/stimulus-listeners.umd.js"
     }
   },
   "files": [
