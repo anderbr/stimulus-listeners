@@ -21,6 +21,7 @@
     "prepare": "npm run build",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix"
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@hotwired/stimulus": "^3.2.1",
+    "@playwright/test": "^1.52.0",
     "@types/node": "^22.15.29",
     "@typescript-eslint/eslint-plugin": "^8.33.0",
     "@typescript-eslint/parser": "^8.33.0",

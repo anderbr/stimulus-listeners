@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Stimulus Listeners Tests</title>
+  <script src="https://unpkg.com/@hotwired/stimulus"></script>
+  <style>
+    div[data-controller] {
+      height: 100px;
+      padding: 40px;
+    }
+  </style>
+  <script src="../../eslint.config.js"></script>
+</head>
+<body>
+  
+  <div data-controller="test" data-test-name-value="A">
+    <button id="btn1">Button 1</button>
+    <span data-test-target="log" id="log1">log1</span>
+  </div>
+  
+  <div data-controller="test" data-test-name-value="B">
+    <button id="btn2">Button 2</button>
+    <span data-test-target="log" id="log2">log2</span>
+  </div>
+  
+  <script type="module">
+    import { useListeners } from "https://cdn.jsdelivr.net/npm/@smnandre/stimulus-listeners@latest/dist/stimulus-listeners.es.js";
+    class TestController extends window.Stimulus.Controller {
+      static targets = ['log']
+      static values = { name: String }
+      static listeners = { 
+        click: 'onClick',
+        mouseleave: { method: 'onMouseLeave', options: { once: true } },
+      }
+      initialize() { 
+        useListeners(this); 
+      }
+      onClick() {
+        this.logTarget.textContent = this.nameValue + '::onClick()';
+      }
+      onMouseLeave() {
+        this.logTarget.textContent = this.nameValue + '::onMouseLeave()';
+      }
+    }
+    window.application = window.Stimulus.Application.start();
+    window.application.register('test', TestController);
+  </script>
+</body>
+</html>
