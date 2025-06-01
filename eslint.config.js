@@ -19,7 +19,6 @@ export default [
     },
     rules: {
       ...tseslint.configs.recommended.rules,
-      // Example: your custom rules here
       'import/order': ['warn', {'newlines-between': 'always'}],
       '@typescript-eslint/explicit-module-boundary-types': 'off'
     }
