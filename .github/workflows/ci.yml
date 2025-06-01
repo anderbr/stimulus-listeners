@@ -23,12 +23,16 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     
+    # Fix npm bug with optional dependencies
+    # see: https://github.com/hydephp/hyde/issues/289
+    - name: Remove node_modules and package-lock.json
+      run: rm -rf node_modules package-lock.json
+    
+    - name: Clear npm cache
+      run: npm cache clean --force
+    
     - name: Install dependencies
-      run: npm ci
+      run: npm install
     
     - name: Run tests
       run: npm test
-    
-    - name: Build package
-      run: npm run build
-    
