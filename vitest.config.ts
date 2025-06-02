@@ -6,7 +6,8 @@ export default defineConfig({
     environment: 'happy-dom',
     coverage: {
       provider: 'istanbul',
-      reporter: ['text', 'lcov']
+      reporter: ['text', 'lcov'],
+      exclude: ['*.config.ts', 'tests/**'],
     },
     include: ['tests/**/*.test.ts'],
     exclude: ['tests/e2e/**'],
